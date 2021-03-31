@@ -41,7 +41,7 @@ services:
     command: --max-allowed-packet=64MB
     restart: always
     labels:
-      - "mysql.backup=true"    
+      mysql.backup: true
     volumes:
       - db:/var/lib/mysql
       - db-backup:/backup
