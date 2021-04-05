@@ -21,6 +21,8 @@ services:
   app:
     image: matomo:fpm-alpine
     restart: always
+    labels:
+      - "traefik.enable=false"
     networks:
       - db
       - app
@@ -42,7 +44,9 @@ services:
     command: --max-allowed-packet=64MB
     restart: always
     labels:
-      mysql.backup: true
+    labels:
+      - "traefik.enable=false"
+      - "mysql.backup=True"
     volumes:
       - db:/var/lib/mysql
       - db-backup:/backup
