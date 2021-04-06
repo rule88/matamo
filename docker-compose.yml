@@ -10,6 +10,7 @@ services:
     depends_on:
       - app
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.matamo.rule=${TRAEFIK_HOSTS}"
       - "traefik.http.routers.matamo.entrypoints=websecure"
       - "traefik.http.routers.matamo.tls.certresolver=letsencrypt"
@@ -21,8 +22,6 @@ services:
   app:
     image: matomo:fpm-alpine
     restart: always
-    labels:
-      - "traefik.enable=false"
     networks:
       - db
       - app
@@ -45,8 +44,7 @@ services:
     restart: always
     labels:
     labels:
-      - "traefik.enable=false"
-      - "mysql.backup=True"
+      mysql.backup: true
     volumes:
       - db:/var/lib/mysql
       - db-backup:/backup
