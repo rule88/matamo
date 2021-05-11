@@ -38,6 +38,25 @@ services:
       MATOMO_DATABASE_DBNAME: ${MYSQL_DATABASE}
     depends_on:
       - db
+  cron:
+    image: matomo:fpm-alpine
+    restart: always
+    networks:
+      - db
+    volumes:
+      - app:/var/www/html:ro
+    tmpfs:
+      - /var/www/html/tmp:uid=82,gid=82
+    environment:
+      MATOMO_DATABASE_HOST: db
+      MATOMO_DATABASE_ADAPTER: mysql
+      MATOMO_DATABASE_TABLES_PREFIX: piwik_
+      MATOMO_DATABASE_USERNAME: ${MYSQL_USER}
+      MATOMO_DATABASE_PASSWORD: ${MYSQL_PASSWORD}
+      MATOMO_DATABASE_DBNAME: ${MYSQL_DATABASE}
+    depends_on:
+      - db
+    entrypoint: "sh -c 'while true; do php console core:archive --url=https://piwik.rule88.nl/; sleep 600; done'"
   db:
     image: mariadb
     command: --max-allowed-packet=64MB
